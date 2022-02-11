@@ -1,17 +1,48 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from Productos import Productos
+Arregloproductos=[]
+Anio = 0
+Mes = ""
 
 def CargarData():
+    global Arregloproductos
+    global Anio
+    global Mes
     root = Tk()
     root.withdraw()
     root.update()
     pathString = askopenfilename(filetypes=[("Text files","*.data")])
+
     if pathString:
         openFile = open(pathString, 'r')
-        fileString = openFile.read()
-        print(fileString)
+        ArchivoOriginal = openFile.read()
+        ArchivoOriginal = ArchivoOriginal.replace(" ","")
+        ArchivoOriginal = ArchivoOriginal.replace("\n","")
+        ArchivoOriginal = ArchivoOriginal.replace("(","")
+        ArchivoOriginal = ArchivoOriginal.replace(")","")
+        ArchivoOriginal = ArchivoOriginal.replace('"','')
+        ArchivoOriginal = ArchivoOriginal.replace('[','')
+        ArchivoOriginal = ArchivoOriginal.replace(';','')
+        PrimeraSeparacion = ArchivoOriginal.split('=')
+        Fecha = PrimeraSeparacion[0]
+        Ventas = PrimeraSeparacion[1]
+        SegundaSeparacion = Fecha.split(':')
+        Mes = SegundaSeparacion[0]
+        Anio = SegundaSeparacion[1]
+        TerceraSeparacion = Ventas.split(']')
+        j=len(TerceraSeparacion)-1
+
+        for i in range(j):
+            CuartaSeparacion = TerceraSeparacion[i].split(',')
+            NombreTemporal = CuartaSeparacion[0]
+            PrecioTemporal = float(CuartaSeparacion[1])
+            CantidadTemporal = int(CuartaSeparacion[2])              
+            NuevoProducto = Productos(NombreTemporal,PrecioTemporal,CantidadTemporal)
+            Arregloproductos.append(NuevoProducto)
+
     root.destroy()
+    
 
 def CargarInstrucciones():
     root = Tk()
@@ -20,8 +51,17 @@ def CargarInstrucciones():
     pathString = askopenfilename(filetypes=[("Text files","*.lfp")])
     if pathString:
         openFile = open(pathString, 'r')
-        fileString = openFile.read()
-        print(fileString)
+        ArchivoInstrucciones = openFile.read()
+        print(ArchivoInstrucciones)
+        ArchivoInstrucciones = ArchivoInstrucciones.replace(" ","")
+        ArchivoInstrucciones = ArchivoInstrucciones.replace("\n","")
+        ArchivoInstrucciones = ArchivoInstrucciones.replace("<","")
+        ArchivoInstrucciones = ArchivoInstrucciones.replace(">","")
+        ArchivoInstrucciones = ArchivoInstrucciones.replace("¿","")
+        ArchivoInstrucciones = ArchivoInstrucciones.replace("?","")
+        ArchivoInstrucciones = ArchivoInstrucciones.replace("\t","")
+        ArchivoInstrucciones = ArchivoInstrucciones.replace("Â","")
+        print(ArchivoInstrucciones)
     root.destroy()
 
 

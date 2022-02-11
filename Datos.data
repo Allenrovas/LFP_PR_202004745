@@ -1,6 +1,6 @@
-JUNIO : 2021 = {
+JUNIO : 2021 = (
     ["Libros", 25, 33];
     ["Cuadernos", 35.75,10];
     ["Hojas", 15,170];
     ["Calculadoras", 50,5];
-}
+)
