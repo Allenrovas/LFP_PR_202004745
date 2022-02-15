@@ -24,6 +24,7 @@ def CargarData():
         ArchivoOriginal = ArchivoOriginal.replace('"','')
         ArchivoOriginal = ArchivoOriginal.replace('[','')
         ArchivoOriginal = ArchivoOriginal.replace(';','')
+        ArchivoOriginal = ArchivoOriginal.replace("\t","")
         PrimeraSeparacion = ArchivoOriginal.split('=')
         Fecha = PrimeraSeparacion[0]
         Ventas = PrimeraSeparacion[1]
@@ -37,8 +38,9 @@ def CargarData():
             CuartaSeparacion = TerceraSeparacion[i].split(',')
             NombreTemporal = CuartaSeparacion[0]
             PrecioTemporal = float(CuartaSeparacion[1])
-            CantidadTemporal = int(CuartaSeparacion[2])              
-            NuevoProducto = Productos(NombreTemporal,PrecioTemporal,CantidadTemporal)
+            CantidadTemporal = int(CuartaSeparacion[2])
+            TotalTemporal = PrecioTemporal*CantidadTemporal              
+            NuevoProducto = Productos(NombreTemporal,PrecioTemporal,CantidadTemporal,TotalTemporal)
             Arregloproductos.append(NuevoProducto)
 
     root.destroy()
@@ -53,7 +55,7 @@ def CargarInstrucciones():
         openFile = open(pathString, 'r')
         ArchivoInstrucciones = openFile.read()
         print(ArchivoInstrucciones)
-        ArchivoInstrucciones = ArchivoInstrucciones.replace(" ","")
+
         ArchivoInstrucciones = ArchivoInstrucciones.replace("\n","")
         ArchivoInstrucciones = ArchivoInstrucciones.replace("<","")
         ArchivoInstrucciones = ArchivoInstrucciones.replace(">","")
@@ -61,7 +63,10 @@ def CargarInstrucciones():
         ArchivoInstrucciones = ArchivoInstrucciones.replace("?","")
         ArchivoInstrucciones = ArchivoInstrucciones.replace("\t","")
         ArchivoInstrucciones = ArchivoInstrucciones.replace("Â","")
-        print(ArchivoInstrucciones)
+        ArchivoInstrucciones = ArchivoInstrucciones.replace('"','')
+        ArchivoInstrucciones = ArchivoInstrucciones.lower()
+        DiccionarioDatos = dict((l.split(': ') for l in ArchivoInstrucciones.split(',')))
+        print(DiccionarioDatos)
     root.destroy()
 
 
