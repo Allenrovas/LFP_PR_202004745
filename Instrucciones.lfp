@@ -1,7 +1,6 @@
 <¿	
 	Nombre: "reporte01",
-	Grafica: "Barras",
+	Grafica: "lineas",
 	Titulo: "Reporte de Ventas Agosto",
-	TituloX: "Producto",
 	TituloY: "total"
 ?>

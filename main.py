@@ -1,9 +1,13 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from Productos import Productos
+from os import system
+import matplotlib.pyplot as plt
+import numpy as np
 Arregloproductos=[]
 Anio = 0
 Mes = ""
+SeleccionarUsuario=0
 
 def CargarData():
     global Arregloproductos
@@ -39,7 +43,7 @@ def CargarData():
             NombreTemporal = CuartaSeparacion[0]
             PrecioTemporal = float(CuartaSeparacion[1])
             CantidadTemporal = int(CuartaSeparacion[2])
-            TotalTemporal = PrecioTemporal*CantidadTemporal              
+            TotalTemporal = PrecioTemporal*CantidadTemporal             
             NuevoProducto = Productos(NombreTemporal,PrecioTemporal,CantidadTemporal,TotalTemporal)
             Arregloproductos.append(NuevoProducto)
 
@@ -47,6 +51,7 @@ def CargarData():
     
 
 def CargarInstrucciones():
+    global DiccionarioDatos
     root = Tk()
     root.withdraw()
     root.update()
@@ -54,8 +59,6 @@ def CargarInstrucciones():
     if pathString:
         openFile = open(pathString, 'r')
         ArchivoInstrucciones = openFile.read()
-        print(ArchivoInstrucciones)
-
         ArchivoInstrucciones = ArchivoInstrucciones.replace("\n","")
         ArchivoInstrucciones = ArchivoInstrucciones.replace("<","")
         ArchivoInstrucciones = ArchivoInstrucciones.replace(">","")
@@ -65,14 +68,101 @@ def CargarInstrucciones():
         ArchivoInstrucciones = ArchivoInstrucciones.replace("Â","")
         ArchivoInstrucciones = ArchivoInstrucciones.replace('"','')
         ArchivoInstrucciones = ArchivoInstrucciones.lower()
+        DiccionarioDatos = {'nombre' : '','titulo' : '','titulox' : '','tituloy' : '','grafica' : ''} 
         DiccionarioDatos = dict((l.split(': ') for l in ArchivoInstrucciones.split(',')))
         print(DiccionarioDatos)
     root.destroy()
 
+    if DiccionarioDatos['nombre']=='' or DiccionarioDatos['grafica']=='':
+        DiccionarioDatos=""
+        print("Faltan informacion obligatoria") 
+
+def Analizar():
+    global Arregloproductos
+    DatosX=[]
+    DatosY=[]
+    j= len(Arregloproductos)
+
+    if DiccionarioDatos['grafica']=='lineas':
+        i=0
+        for i in range(j):
+            DatosX.append(Arregloproductos[i].nombre)
+            DatosY.append(Arregloproductos[i].total)
+            i+=1
+
+        fig, ax = plt.subplots()
+
+        ax.plot(DatosX,DatosY)
+        
+        if DiccionarioDatos['titulo'] != None:
+            ax.set_title(str(DiccionarioDatos['titulo']))
+        
+        if DiccionarioDatos['tituloy'] != None:
+            ax.set_ylabel(str(DiccionarioDatos['tituloy']))
+        
+        if DiccionarioDatos['titulox'] != None:
+            ax.set_xlabel(str(DiccionarioDatos['titulox']))
 
 
-SeleccionarUsuario=0
-def MenuInicial(SeleccionarUsuario):
+        plt.savefig(str(DiccionarioDatos['nombre'])+'.png')
+        system(str(DiccionarioDatos['nombre'])+'.png')
+        
+    elif DiccionarioDatos['grafica']=='barras':
+        i=0
+        for i in range(j):
+            DatosX.append(Arregloproductos[i].nombre)
+            DatosY.append(Arregloproductos[i].total)
+            i+=1
+
+
+        
+        fig, ax = plt.subplots()
+
+        ax.bar(DatosX, DatosY)
+
+        if DiccionarioDatos['titulo'] != None:
+            ax.set_title(str(DiccionarioDatos['titulo']))
+        
+        if DiccionarioDatos['tituloy'] != None:
+            ax.set_ylabel(str(DiccionarioDatos['tituloy']))
+        
+        if DiccionarioDatos['titulox'] != None:
+            ax.set_xlabel(str(DiccionarioDatos['titulox']))
+
+        plt.savefig(str(DiccionarioDatos['nombre'])+'.png')
+        system(str(DiccionarioDatos['nombre'])+'.png')
+        
+    elif DiccionarioDatos['grafica']=='pie' or DiccionarioDatos['grafica']=='pastel':
+        i=0
+        for i in range(j):
+            DatosX.append(Arregloproductos[i].nombre)
+            DatosY.append(int(Arregloproductos[i].total))
+            i+=1
+
+        fig, ax = plt.subplots()
+
+        ax.pie(DatosY, labels = DatosX, autopct="%0.1f %%")
+        
+        if DiccionarioDatos['titulo'] != None:
+            ax.set_title(str(DiccionarioDatos['titulo']))
+        
+        if DiccionarioDatos['tituloy'] != None:
+            ax.set_ylabel(str(DiccionarioDatos['tituloy']))
+        
+        if DiccionarioDatos['titulox'] != None:
+            ax.set_xlabel(str(DiccionarioDatos['titulox']))
+
+        plt.savefig(str(DiccionarioDatos['nombre'])+'.png')
+        system(str(DiccionarioDatos['nombre'])+'.png')
+    else:
+        print("Usted no ingreso un nombre válido para el gráfico")
+
+def Reportes():
+    print("Hola")
+
+def MenuInicial():
+    global SeleccionarUsuario
+    SeleccionarUsuario=0
     print("         Menu Ventas")
     print("==============================================")
     print("Pulse el numero correspondiente a la solicitud")
@@ -84,28 +174,27 @@ def MenuInicial(SeleccionarUsuario):
     print("5. Salir")
     print("")
     SeleccionarUsuario = int(input())
-    return SeleccionarUsuario
+    if SeleccionarUsuario == 1:
+        CargarData()
+        MenuInicial()
+    elif SeleccionarUsuario == 2:
+        CargarInstrucciones()
+        MenuInicial()
+    elif SeleccionarUsuario == 3:
+        Analizar()
+        MenuInicial()
+    elif SeleccionarUsuario == 4:
+        Reportes()
+        MenuInicial()
+    elif SeleccionarUsuario == 5:
+        print("Gracias por usar nuestro sistema, buen dia.")
+        exit
+    else:
+        print("")
+        print("Ingrese una entrada valida")
+        print("")
+        MenuInicial()
+  
 
-    
-SeleccionarUsuario=MenuInicial(SeleccionarUsuario)
-if SeleccionarUsuario == 1:
-    CargarData()
-    SeleccionarUsuario=MenuInicial(SeleccionarUsuario)
-elif SeleccionarUsuario == 2:
-    CargarInstrucciones()
-    SeleccionarUsuario=MenuInicial(SeleccionarUsuario)
-elif SeleccionarUsuario == 3:
-    
-    SeleccionarUsuario=MenuInicial(SeleccionarUsuario)
-elif SeleccionarUsuario == 4:
-    
-    SeleccionarUsuario=MenuInicial(SeleccionarUsuario)
-elif SeleccionarUsuario == 5:
-    print("Gracias por usar nuestro sistema, buen dia.")
-    exit
-else:
-    print("")
-    print("Ingrese una entrada valida")
-    print("")
-    MenuInicial(SeleccionarUsuario)
+MenuInicial()
 
