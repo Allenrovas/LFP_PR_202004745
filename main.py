@@ -11,7 +11,6 @@ VerificacionDatos=False
 VerificacionInstrucciones1=False
 VerificacionInstrucciones2=False
 
-
 def ordenamientoBurbuja(Lista):
   tamaño=len(Lista)
   i=0
@@ -19,6 +18,19 @@ def ordenamientoBurbuja(Lista):
       j=0
       while j < tamaño - 1:
         if Lista[j].cantidad < Lista[j+1].cantidad:
+          temp = Lista[j+1]
+          Lista[j+1] = Lista[j]
+          Lista[j] = temp
+        j+=1
+      i+=1
+
+def ordenamientoBurbuja1(Lista):
+  tamaño=len(Lista)
+  i=0
+  while i < tamaño - 1:
+      j=0
+      while j < tamaño - 1:
+        if Lista[j].total < Lista[j+1].total:
           temp = Lista[j+1]
           Lista[j+1] = Lista[j]
           Lista[j] = temp
@@ -69,8 +81,6 @@ def CargarData():
         print("")
     root.destroy()
 
-    
-
 def CargarInstrucciones():
     global DiccionarioDatos
     global VerificacionInstrucciones1
@@ -94,7 +104,6 @@ def CargarInstrucciones():
         ArchivoInstrucciones = ArchivoInstrucciones.replace(' ','')
         ArchivoInstrucciones = ArchivoInstrucciones.lower() 
         DiccionarioDatos = dict((l.split(':') for l in ArchivoInstrucciones.split(',')))
-        print(DiccionarioDatos)
         print("Se ha cargado el archivo de instrucciones")
         print("")
         try:
@@ -113,8 +122,6 @@ def CargarInstrucciones():
             print("")
             VerificacionInstrucciones2=False
     root.destroy()
-
-         
 
 def Analizar():
     DatosX=[]
@@ -135,7 +142,7 @@ def Analizar():
         if hasattr(DiccionarioDatos, 'titulo'):
             ax.set_title(str(DiccionarioDatos['titulo']))
         else:
-            SegundoTitulo= Mes+" "+Anio
+            SegundoTitulo= "Reporte de Ventas "+Mes+" - "+Anio
             ax.set_title(SegundoTitulo)
 
         if hasattr(DiccionarioDatos, 'tituloy'):
@@ -167,7 +174,7 @@ def Analizar():
         if hasattr(DiccionarioDatos, 'titulo'):
             ax.set_title(str(DiccionarioDatos['titulo']))
         else:
-            SegundoTitulo= Mes+" "+Anio
+            SegundoTitulo= "Reporte de Ventas "+Mes+" - "+Anio
             ax.set_title(SegundoTitulo)
 
         if hasattr(DiccionarioDatos, 'tituloy'):
@@ -196,7 +203,7 @@ def Analizar():
         if hasattr(DiccionarioDatos, 'titulo'):
             ax.set_title(str(DiccionarioDatos['titulo']))
         else:
-            SegundoTitulo= Mes+" "+Anio
+            SegundoTitulo= "Reporte de Ventas "+Mes+" - "+Anio
             ax.set_title(SegundoTitulo)
 
         if hasattr(DiccionarioDatos, 'tituloy'):
@@ -221,7 +228,7 @@ def Reportes():
     <html lang=es>
     <head>
     <meta charset = "utf-8 ">
-    <title>REPORTE DEL JUEGO</title>
+    <title>REPORTES</title>
     <style type = "text/css">
     body{
         margin: 0;
@@ -308,7 +315,7 @@ def Reportes():
     archivo = open(ruta,'w')
     archivo.write(CuerpoHtml)
     startfile(str(DiccionarioDatos['nombre'])+'.html')
-    print("Se ha generado el html")
+    print("Se ha generado el html con los reportes.")
 
 def MenuInicial():
     global SeleccionarUsuario
@@ -344,7 +351,7 @@ def MenuInicial():
         MenuInicial()
     elif SeleccionarUsuario == 4:
         if VerificacionDatos==True and VerificacionInstrucciones1==True:
-            ordenamientoBurbuja(Arregloproductos)
+            ordenamientoBurbuja1(Arregloproductos)
             ordenamientoBurbuja(ListaCantidadVendida)
             Reportes()
         else:
@@ -359,5 +366,4 @@ def MenuInicial():
         print("")
         MenuInicial()
   
-
 MenuInicial()
